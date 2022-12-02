@@ -1,2 +1,2 @@
-# rdeval
-seamless read analysis
+# tool name
+tool description
