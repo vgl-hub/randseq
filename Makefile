@@ -1,5 +1,5 @@
 CXX = g++
-INCLUDE_DIR = -I./include
+INCLUDE_DIR = -I./include -Igfalibs/include
 WARNINGS = -Wall -Wextra
 
 CXXFLAGS = -g -std=gnu++14 -O3 $(INCLUDE_DIR) $(WARNINGS)
@@ -8,30 +8,36 @@ TARGET = mytool
 BUILD = build/bin
 SOURCE = src
 INCLUDE = include
-LDFLAGS :=
+BINDIR := $(BUILD)/.o
+LIBS = -lz
+LDFLAGS = -pthread
 
-SUBMODULE1_SUBDIR := $(CURDIR)/submodule1
-SUBMODULE1_LIBSFILES := $(GFASTATS_SUBDIR)/$(SOURCE)/* $(SUBMODULE1_SUBDIR)/$(INCLUDE)/*
+MODULE1_DIR := $(CURDIR)/submodule1
 
-SUBMODULE2_SUBDIR := $(CURDIR)/submodule2
-SUBMODULE2_LIBSFILES := $(GFALIGN_SUBDIR)/$(SOURCE)/* $(SUBMODULE2_SUBDIR)/$(INCLUDE)/*
+OBJS := main
+BINS := $(addprefix $(BINDIR)/, $(OBJS))
 
-main: $(SOURCE)/main.cpp $(SUBMODULE1_LIBSFILES) $(SUBMODULE2_LIBSFILES) | $(BUILD)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(SOURCE)/main.cpp -o $(BUILD)/$(TARGET)
-
-$(SUBMODULE1_LIBSFILES): submodule1
-	@# Do nothing
+head: $(BINS) gfalibs | $(BUILD)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(BUILD)/$(TARGET) $(wildcard $(BINDIR)/*) $(MODULE1_DIR)/*.o $(LIBS)
 	
-$(SUBMODULE2_LIBSFILES): submodule2
-	@# Do nothing
+debug: CXXFLAGS += -DDEBUG
+debug: CCFLAGS += -DDEBUG
+debug: head
 
-.PHONY: submodule1
-submodule1:
-	$(MAKE) -j -C $(SUBMODULE1_SUBDIR)
+all: head
+
+$(OBJS): %: $(BINDIR)/%
+	@
+$(BINDIR)%: $(SOURCE)/%.cpp $(INCLUDE)/%.h | $(BINDIR)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -c $(SOURCE)/$(notdir $@).cpp -o $@
 	
-.PHONY: submodule2
-submodule2:
-	$(MAKE) -j -C $(SUBMODULE2_SUBDIR)
+.PHONY: module1
+module1:
+	$(MAKE) -j -C $(MODULE1_DIR) CXXFLAGS="$(CXXFLAGS)"
+	
+.PHONY: module2
+module2:
+	$(MAKE) -j -C $(MODULE2_DIR) CXXFLAGS="$(CXXFLAGS)"
 	
 $(BUILD):
 	-mkdir -p $@
