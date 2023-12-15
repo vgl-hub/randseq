@@ -9,5 +9,8 @@
 #include <unordered_map>
 
 #include <getopt.h>
+#include "global.h"
+#include "bed.h"
+#include "struct.h"
 
 #endif /* MAIN_H */

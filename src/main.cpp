@@ -4,24 +4,10 @@ std::string version = "0.0.1";
 
 std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now(); // immediately start the clock when the program is run
 
-short int tabular_flag;
 int verbose_flag;
-int seqReport_flag;
-int outSequence_flag;
-int nstarReport_flag;
-int outSize_flag;
-int outCoord_flag;
-int outFile_flag;
-int outBubbles_flag;
-int stats_flag;
-int rmGaps_flag;
-int discoverPaths_flag;
-int extractContigs_flag;
-int hc_flag;
-int hc_cutoff;
-int terminalOvlLen = 0;
 int maxThreads = 0;
 int cmd_flag;
+UserInput userInput;
 
 std::mutex mtx;
 ThreadPool<std::function<bool()>> threadPool;
@@ -58,9 +44,7 @@ int main(int argc, char **argv) {
     
     std::string cmd;
     
-    bool isPipe = false; // to check if input is from pipe
-    
-    UserInput userInput;
+    //bool isPipe = false; // to check if input is from pipe
     
     if (argc == 1) { // mytool with no arguments
             
