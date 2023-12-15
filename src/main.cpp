@@ -27,6 +27,28 @@ std::mutex mtx;
 ThreadPool<std::function<bool()>> threadPool;
 Log lg;
 
+std::string getArgs(char* optarg, unsigned int argc, char **argv) {
+    
+    std::string cmd;
+    bool record = false;
+
+    for (unsigned short int arg_counter = 0; arg_counter < argc; arg_counter++) {
+        
+        if (optarg != argv[arg_counter] && !record) {
+            continue;
+        }else{
+            record = true;
+            if(optarg != argv[arg_counter]){
+                cmd += ' ';
+                cmd += argv[arg_counter];
+            }
+        }
+    }
+    
+    return cmd;
+    
+}
+
 int main(int argc, char **argv) {
     
     short int c; // optarg
@@ -56,7 +78,7 @@ int main(int argc, char **argv) {
     };
     
     const static std::unordered_map<std::string,int> tools{
-        {"something",1}
+        {"something",1},
         {"somethingelse",2}
     };
     
@@ -87,13 +109,13 @@ int main(int argc, char **argv) {
                                 
                 switch (tools.count(optarg) ? tools.at(optarg) : 0) {
                     case 1:
-                        cmd = "gfastats/build/bin/gfastats" + getArgs(optarg, argc, argv);;
+                        cmd = "gfastats/build/bin/mytool" + getArgs(optarg, argc, argv);;
                         
                         arguments = false;
                         
                         break;
                     case 2:
-                        cmd = "gfalign/build/bin/gfalign" + getArgs(optarg, argc, argv);;
+                        cmd = "gfalign/build/bin/mytool2" + getArgs(optarg, argc, argv);;
                         
                         arguments = false;
                         
@@ -141,27 +163,5 @@ int main(int argc, char **argv) {
     std::system(cmd.c_str());
     
     exit(EXIT_SUCCESS);
-    
-}
-
-std::string getArgs(char* optarg, unsigned int argc, char **argv) {
-    
-    std::string cmd;
-    bool record = false;
-
-    for (unsigned short int arg_counter = 0; arg_counter < argc; arg_counter++) {
-        
-        if (optarg != argv[arg_counter] && !record) {
-            continue;
-        }else{
-            record = true;
-            if(optarg != argv[arg_counter]){
-                cmd += ' ';
-                cmd += argv[arg_counter];
-            }
-        }
-    }
-    
-    return cmd;
     
 }
