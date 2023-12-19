@@ -5,7 +5,7 @@ WARNINGS = -Wall -Wextra
 
 CXXFLAGS = -g -std=gnu++14 -O3 $(INCLUDE_DIR) $(WARNINGS)
 
-TARGET = mytool #name of tool
+TARGET = randseq #name of tool
 BUILD = build/bin
 SOURCE = src
 INCLUDE = include
@@ -13,11 +13,11 @@ BINDIR := $(BUILD)/.o
 LIBS = -lz
 LDFLAGS = -pthread
 
-OBJS := main
+OBJS := main input
 BINS := $(addprefix $(BINDIR)/, $(OBJS))
 
 head: $(BINS) module1 #module2 | $(BUILD)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(BUILD)/$(TARGET) $(wildcard $(BINDIR)/*) $(LIBS) #$(MODULE1_DIR)/*.o
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $(BUILD)/$(TARGET) $(wildcard $(BINDIR)/*) $(LIBS) $(MODULE1_DIR)/*.o
 	
 debug: CXXFLAGS += -DDEBUG -O0
 debug: CCFLAGS += -DDEBUG
