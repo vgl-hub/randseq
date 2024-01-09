@@ -5,6 +5,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <getopt.h>
+#include <vector>
 
 #include "log.h"
 #include "uid-generator.h"
