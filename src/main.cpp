@@ -1,4 +1,23 @@
-#include <main.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <string>
+#include <iostream>
+#include <unordered_map>
+#include <getopt.h>
+
+#include "log.h"
+#include "uid-generator.h"
+#include "bed.h"
+#include "global.h"
+#include "struct.h"
+#include "functions.h"
+#include "threadpool.h"
+#include "gfa-lines.h"
+#include "gfa.h"
+#include "stream-obj.h"
+#include "input.h"
+#include "main.h"
 
 std::string version = "0.0.1";
 
@@ -56,6 +75,7 @@ int main(int argc, char **argv) {
     
     static struct option long_options[] = { // struct mapping long options
         {"average-read-length", required_argument, 0, 'a'},
+        {"input-sequence", required_argument, 0, 'f'},
         {"gc-content", required_argument, 0, 'g'},
         {"sequence-length", required_argument, 0, 'l'},
         {"mutation-rate", required_argument, 0, 'm'},
@@ -80,7 +100,7 @@ int main(int argc, char **argv) {
         
         int option_index = 0;
         
-        c = getopt_long(argc, argv, "-:a:g:l:m:r:s:j:vh",
+        c = getopt_long(argc, argv, "-:a:f:g:l:m:r:s:j:vh",
                         long_options, &option_index);
         
         if (c == -1) { // exit the loop if run out of options
@@ -177,11 +197,12 @@ int main(int argc, char **argv) {
             case 'h': // help
                 printf("randseq [command]\n");
                 printf("\nOptions:\n");
-                printf("\t-a --average-read-length <int>.\n");
-                printf("\t-g --gc-content <float>.\n");
+                printf("\t-f --input-sequence sequence input file (fasta,gfa1/2).\n");
+                printf("\t-a --average-read-length <int> (default: 150).\n");
+                printf("\t-g --gc-content <float> (default: 0.5).\n");
                 printf("\t-l --sequence-length <int>.\n");
-                printf("\t-m --mutation-rate <float>.\n");
-                printf("\t-r --read-coverage <float>.\n");
+                printf("\t-m --mutation-rate <float> (default: 0).\n");
+                printf("\t-r --read-coverage <float> (default: 0).\n");
                 printf("\t-s --rand-seed <int>.\n");
                 printf("\t-v --version software version.\n");
                 printf("\t--verbose verbose output.\n");
@@ -207,11 +228,15 @@ int main(int argc, char **argv) {
     
     Input in;
     
+    threadPool.init(maxThreads); // initialize threadpool
+    
     in.load(userInput); // load user input
     
     lg.verbose("Loaded user input");
     
     in.execute(); // execute tool
+    
+    threadPool.join(); // join threads
     
 //    std::cout<<"Invoking: "<<cmd<<std::endl;
 //    std::system(cmd.c_str());
