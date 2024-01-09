@@ -216,7 +216,8 @@ void Input::report() { // generates the output from the program
         case 1: { // .fasta
             
             writeFasta();
-            writeFastq();
+            if (userInput.readCoverage != 0)
+                writeFastq();
             writeBed();
             
             break;
