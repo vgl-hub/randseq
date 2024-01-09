@@ -400,7 +400,9 @@ void Input::writeFastq() {
         
         for (uint64_t i = 0; i < seq.size(); ++i) {
             
-            if ((i % pass == 0) && (i + userInput.avgReadLen < userInput.sequenceLength)) {
+            if ((i % pass == 0) && (i + userInput.avgReadLen < seq.size())) {
+                
+                std::cout<<pass<<std::endl;
                 
                 readsFile<< "@read " << i << "\n"
                             << seq.substr(i, userInput.avgReadLen) << "\n"
