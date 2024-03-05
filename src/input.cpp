@@ -277,7 +277,7 @@ void Input::writeFasta() {
                 errorBase = bases[findCeil(newRand())];
                 
                 referenceErrorFile<<errorBase;
-                errorVcfFile<<header<<"\t"<<i<<"\t"<<base<<"\t"<<errorBase<<std::endl;;
+                errorVcfFile<<header<<"\t"<<i+1<<"\t"<<base<<"\t"<<errorBase<<std::endl; // +1 because vcf is 1-bed
                 
             }else{
                 
@@ -347,12 +347,11 @@ void Input::writeFasta() {
                                 errorBase = bases[findCeil(newRand())];
                                 
                                 referenceErrorFile<<errorBase;
-                                errorVcfFile<<header<<"\t"<<absPos<<"\t"<<base<<"\t"<<errorBase<<std::endl;;
+                                errorVcfFile<<header<<"\t"<<++absPos<<"\t"<<base<<"\t"<<errorBase<<std::endl; // +1 because vcf is 1-bed
                                 
                             }else{
                                 referenceErrorFile<<base;
                             }
-                            ++absPos;
                         }
                     }else{
                         // GFA not handled yet
