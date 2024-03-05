@@ -28,6 +28,7 @@ int verbose_flag;
 int tabular_flag;
 int maxThreads = 0;
 int cmd_flag;
+std::vector<Log> logs;
 UserInputRandseq userInput;
 
 std::mutex mtx;

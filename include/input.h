@@ -39,8 +39,6 @@ public:
     
     void writeFastq();
     
-    void writeBed();
-    
 };
 
 #endif /* INPUT_H */

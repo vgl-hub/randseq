@@ -218,7 +218,6 @@ void Input::report() { // generates the output from the program
             writeFasta();
             if (userInput.readCoverage != 0)
                 writeFastq();
-            writeBed();
             
             break;
             
@@ -247,9 +246,8 @@ void Input::report() { // generates the output from the program
 void Input::writeFasta() {
     
     float r;
-    char base;
+    char base, errorBase;
     std::string referenceCorrectSeq;
-    std::pair<std::string, uint64_t> errorPair;
     
     std::ofstream referenceCorrectFile;
     referenceCorrectFile.open ("referenceCorrect.fasta");
@@ -257,7 +255,10 @@ void Input::writeFasta() {
     std::ofstream referenceErrorFile;
     referenceErrorFile.open ("referenceError.fasta");
     
-    errorPair.first = "Reference";
+    std::ofstream errorVcfFile;
+    errorVcfFile.open ("errors.vcf");
+    
+    std::string header = "Reference";
     
     if (userInput.inSequence.empty()) {
         
@@ -273,10 +274,10 @@ void Input::writeFasta() {
             
             if (newRand() <= userInput.mutationRate) {
                 
-                errorPair.second = i;
+                errorBase = bases[findCeil(newRand())];
                 
-                referenceErrorFile<<bases[findCeil(newRand())];
-                errorPositions.push_back(errorPair);
+                referenceErrorFile<<errorBase;
+                errorVcfFile<<header<<"\t"<<i<<"\t"<<base<<"\t"<<errorBase;
                 
             }else{
                 
@@ -286,8 +287,8 @@ void Input::writeFasta() {
             
         }
         
-        referenceCorrectFile << std::endl;
-        referenceErrorFile << std::endl;
+        referenceCorrectFile<<std::endl;
+        referenceErrorFile<<std::endl;
         referenceCorrect.push_back(referenceCorrectSeq);
         
     }else{
@@ -317,7 +318,7 @@ void Input::writeFasta() {
             referenceCorrectFile<<">"<<path.getHeader()<<std::endl;
             referenceErrorFile<<">"<<path.getHeader()<<std::endl;
             
-            errorPair.first = path.getHeader();
+            header = path.getHeader();
             
             referenceCorrectSeq.clear();
             
@@ -343,50 +344,36 @@ void Input::writeFasta() {
                             
                             if (newRand() <= userInput.mutationRate) {
                                 
-                                referenceErrorFile<<bases[findCeil(newRand())];
+                                errorBase = bases[findCeil(newRand())];
                                 
-                                errorPair.second = absPos;
-                                errorPositions.push_back(errorPair);
+                                referenceErrorFile<<errorBase;
+                                errorVcfFile<<header<<"\t"<<absPos<<"\t"<<base<<"\t"<<errorBase;
                                 
                             }else{
-                                
                                 referenceErrorFile<<base;
-                                
                             }
-                            
                             ++absPos;
-                            
                         }
-                        
                     }else{
-                        
                         // GFA not handled yet
-                        
                     }
-                    
                 }else if (component->type == GAP){
                     
                     auto inGap = find_if(inGaps->begin(), inGaps->end(), [cUId](InGap& obj) {return obj.getuId() == cUId;}); // given a node Uid, find it
                     
                     gapLen += inGap->getDist(component->start - component->end);
-                    
                     absPos += gapLen;
                     
                 }else{} // need to handle edges, cigars etc
-                
             }
-            
             referenceCorrectFile<<std::endl;
             referenceErrorFile<<std::endl;
             referenceCorrect.push_back(referenceCorrectSeq);
-            
         }
-        
     }
-    
     referenceCorrectFile.close();
     referenceErrorFile.close();
-    
+    errorVcfFile.close();
 }
 
 void Input::writeFastq() {
@@ -416,16 +403,5 @@ void Input::writeFastq() {
     }
 
     readsFile.close();
-    
-}
-
-void Input::writeBed() {
-
-    std::ofstream errorBedFile;
-    errorBedFile.open ("errors.bed");
-    for (std::pair<std::string, uint64_t> errorPair : errorPositions) {
-        errorBedFile << errorPair.first << "\t" << errorPair.second << "\n";
-    }
-    errorBedFile.close();
     
 }
