@@ -289,6 +289,7 @@ void Input::writeFasta() {
         
         referenceCorrectFile<<std::endl;
         referenceErrorFile<<std::endl;
+        errorVcfFile<<std::endl;
         referenceCorrect.push_back(referenceCorrectSeq);
         
     }else{
@@ -368,6 +369,7 @@ void Input::writeFasta() {
             }
             referenceCorrectFile<<std::endl;
             referenceErrorFile<<std::endl;
+            errorVcfFile<<std::endl;
             referenceCorrect.push_back(referenceCorrectSeq);
         }
     }
