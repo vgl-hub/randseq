@@ -250,13 +250,13 @@ void Input::writeFasta() {
     std::string referenceCorrectSeq;
     
     std::ofstream referenceCorrectFile;
-    referenceCorrectFile.open ("referenceCorrect.fasta");
+    referenceCorrectFile.open("referenceCorrect.fasta");
     
     std::ofstream referenceErrorFile;
-    referenceErrorFile.open ("referenceError.fasta");
+    referenceErrorFile.open("referenceError.fasta");
     
     std::ofstream errorVcfFile;
-    errorVcfFile.open ("errors.vcf");
+    errorVcfFile.open("errors.vcf");
     
     std::string header = "Reference";
     
@@ -277,7 +277,7 @@ void Input::writeFasta() {
                 errorBase = bases[findCeil(newRand())];
                 
                 referenceErrorFile<<errorBase;
-                errorVcfFile<<header<<"\t"<<i<<"\t"<<base<<"\t"<<errorBase;
+                errorVcfFile<<header<<"\t"<<i<<"\t"<<base<<"\t"<<errorBase<<std::endl;;
                 
             }else{
                 
@@ -289,7 +289,6 @@ void Input::writeFasta() {
         
         referenceCorrectFile<<std::endl;
         referenceErrorFile<<std::endl;
-        errorVcfFile<<std::endl;
         referenceCorrect.push_back(referenceCorrectSeq);
         
     }else{
@@ -348,7 +347,7 @@ void Input::writeFasta() {
                                 errorBase = bases[findCeil(newRand())];
                                 
                                 referenceErrorFile<<errorBase;
-                                errorVcfFile<<header<<"\t"<<absPos<<"\t"<<base<<"\t"<<errorBase;
+                                errorVcfFile<<header<<"\t"<<absPos<<"\t"<<base<<"\t"<<errorBase<<std::endl;;
                                 
                             }else{
                                 referenceErrorFile<<base;
@@ -369,7 +368,6 @@ void Input::writeFasta() {
             }
             referenceCorrectFile<<std::endl;
             referenceErrorFile<<std::endl;
-            errorVcfFile<<std::endl;
             referenceCorrect.push_back(referenceCorrectSeq);
         }
     }
