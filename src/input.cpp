@@ -313,7 +313,7 @@ void Input::writeFasta() {
             
             std::vector<PathComponent> pathComponents = path.getComponents();
             
-            uint64_t absPos = 0;
+            uint64_t absPos = 1; // because vcf is 1-bed
             
             referenceCorrectFile<<">"<<path.getHeader()<<std::endl;
             referenceErrorFile<<">"<<path.getHeader()<<std::endl;
@@ -347,7 +347,7 @@ void Input::writeFasta() {
                                 errorBase = bases[findCeil(newRand())];
                                 
                                 referenceErrorFile<<errorBase;
-                                errorVcfFile<<header<<"\t"<<++absPos<<"\t"<<base<<"\t"<<errorBase<<std::endl; // +1 because vcf is 1-bed
+                                errorVcfFile<<header<<"\t"<<absPos+i<<"\t"<<base<<"\t"<<errorBase<<std::endl;
                                 
                             }else{
                                 referenceErrorFile<<base;
