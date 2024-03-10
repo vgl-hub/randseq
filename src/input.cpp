@@ -362,6 +362,8 @@ void Input::writeFasta() {
                     
                     gapLen += inGap->getDist(component->start - component->end);
                     absPos += gapLen;
+                    referenceCorrectFile<<std::string(gapLen, 'N');
+                    referenceErrorFile<<std::string(gapLen, 'N');
                     
                 }else{} // need to handle edges, cigars etc
             }
