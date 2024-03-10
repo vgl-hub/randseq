@@ -326,7 +326,7 @@ void Input::writeFasta() {
                 
                 cUId = component->id;
                 
-                if (component->type == SEGMENT) {
+                if (component->componentType == SEGMENT) {
                     
                     auto inSegment = find_if(inSegments->begin(), inSegments->end(), [cUId](InSegment* obj) {return obj->getuId() == cUId;}); // given a node Uid, find it
                     
@@ -356,7 +356,7 @@ void Input::writeFasta() {
                     }else{
                         // GFA not handled yet
                     }
-                }else if (component->type == GAP){
+                }else if (component->componentType == GAP){
                     
                     auto inGap = find_if(inGaps->begin(), inGaps->end(), [cUId](InGap& obj) {return obj.getuId() == cUId;}); // given a node Uid, find it
                     
