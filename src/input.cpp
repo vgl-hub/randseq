@@ -274,7 +274,11 @@ void Input::writeFasta() {
             
             if (newRand() <= userInput.mutationRate) {
                 
-                errorBase = bases[findCeil(newRand())];
+                while (true) {
+                    errorBase = bases[findCeil(newRand())];
+                    if (errorBase != base)
+                        break;
+                }
                 
                 referenceErrorFile<<errorBase;
                 errorVcfFile<<header<<"\t"<<i+1<<"\t"<<base<<"\t"<<errorBase<<std::endl; // +1 because vcf is 1-bed
@@ -344,7 +348,11 @@ void Input::writeFasta() {
                             
                             if (newRand() <= userInput.mutationRate) {
                                 
-                                errorBase = bases[findCeil(newRand())];
+                                while (true) {
+                                    errorBase = bases[findCeil(newRand())];
+                                    if (errorBase != base)
+                                        break;
+                                }
                                 
                                 referenceErrorFile<<errorBase;
                                 errorVcfFile<<header<<"\t"<<absPos+i<<"\t"<<base<<"\t"<<errorBase<<std::endl;
