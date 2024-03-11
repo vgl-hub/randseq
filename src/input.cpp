@@ -355,11 +355,12 @@ void Input::writeFasta() {
                                 }
                                 
                                 referenceErrorFile<<errorBase;
-                                errorVcfFile<<header<<"\t"<<absPos+i<<"\t"<<base<<"\t"<<errorBase<<std::endl;
+                                errorVcfFile<<header<<"\t"<<absPos<<"\t"<<base<<"\t"<<errorBase<<std::endl;
                                 
                             }else{
                                 referenceErrorFile<<base;
                             }
+                            ++absPos;
                         }
                     }else{
                         // GFA not handled yet
