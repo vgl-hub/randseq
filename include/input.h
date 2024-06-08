@@ -4,7 +4,7 @@
 struct UserInputRandseq : UserInput {
     
     std::vector<std::string> outFiles; // output files
-    float gcContent = 0.5, mutationRate = 0.0, readCoverage = 0;
+    float gcContent = 0.5, mutationRate = 0.0, readCoverage = 0, rvcpRatio = 0, coverageNoise = 0;
     uint64_t sequenceLength, avgReadLen = 150;
     uint32_t randSeed = 1;
 

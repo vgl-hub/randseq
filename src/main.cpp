@@ -77,10 +77,12 @@ int main(int argc, char **argv) {
     
     static struct option long_options[] = { // struct mapping long options
         {"average-read-length", required_argument, 0, 'a'},
+        {"reverse-complement-ratio", required_argument, 0, 'c'},
         {"input-sequence", required_argument, 0, 'f'},
         {"gc-content", required_argument, 0, 'g'},
         {"sequence-length", required_argument, 0, 'l'},
         {"mutation-rate", required_argument, 0, 'm'},
+        {"coverage-noise", required_argument, 0, 'n'},
         {"read-coverage", required_argument, 0, 'r'},
         {"rand-seed", required_argument, 0, 's'},
         
@@ -102,7 +104,7 @@ int main(int argc, char **argv) {
         
         int option_index = 0;
         
-        c = getopt_long(argc, argv, "-:a:f:g:l:m:r:s:j:vh",
+        c = getopt_long(argc, argv, "-:a:c:f:g:l:m:n:r:s:j:vh",
                         long_options, &option_index);
         
         if (c == -1) { // exit the loop if run out of options
@@ -149,6 +151,10 @@ int main(int argc, char **argv) {
             case 'a': // average read length
                 userInput.avgReadLen = atoi(optarg);
                 break;
+                
+            case 'c': // reverse complement ratio
+                userInput.rvcpRatio = atof(optarg);
+                break;
 
             case 'f': // input sequence
                 
@@ -178,6 +184,10 @@ int main(int argc, char **argv) {
                 userInput.mutationRate = atof(optarg);
                 break;
                 
+            case 'n': // coverage-noise
+                userInput.coverageNoise = atof(optarg);
+                break;
+                
             case 'r': // read coverage
                 userInput.readCoverage = atof(optarg);
                 break;
@@ -201,9 +211,11 @@ int main(int argc, char **argv) {
                 printf("\nOptions:\n");
                 printf("\t-f --input-sequence sequence input file (fasta,gfa1/2).\n");
                 printf("\t-a --average-read-length <int> (default: 150).\n");
+                printf("\t-c --reverse-complement-ratio <float> (default: 0).\n");
                 printf("\t-g --gc-content <float> (default: 0.5).\n");
                 printf("\t-l --sequence-length <int>.\n");
                 printf("\t-m --mutation-rate <float> (default: 0).\n");
+                printf("\t-n --coverage-noise <float> (default: 0).\n");
                 printf("\t-r --read-coverage <float> (default: 0).\n");
                 printf("\t-s --rand-seed <int>.\n");
                 printf("\t-v --version software version.\n");

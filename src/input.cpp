@@ -397,16 +397,15 @@ void Input::writeFastq() {
         
         for (uint64_t i = 0; i < seq.size(); ++i) {
             
-            if ((i % pass == 0) && (i + userInput.avgReadLen < seq.size())) {
-                
-                std::cout<<pass<<std::endl;
-                
+            if ((i % pass == 0 && newRand() > userInput.coverageNoise) && (i + userInput.avgReadLen < seq.size())) {
                 readsFile<< "@read " << i << "\n"
-                            << seq.substr(i, userInput.avgReadLen) << "\n"
+                            << ((newRand() < userInput.rvcpRatio) ? revCom(seq.substr(i, userInput.avgReadLen)) : seq.substr(i, userInput.avgReadLen)) << "\n"
                             << "+\n"
                             << std::string(userInput.avgReadLen, '!') << "\n";
                 
             }
+            if (newRand() < userInput.coverageNoise && i > 0)
+                --i;
             
         }
         
